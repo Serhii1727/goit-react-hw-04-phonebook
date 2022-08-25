@@ -1,74 +1,66 @@
-import React, { Component } from "react";
+import { useState } from "react";
 import PropTypes from 'prop-types';
 import { FormContact, Name, Input, Button } from "./Form.styled";
 
-class ContactForm extends Component {
-    state = {
-        name: '',
-        number: '',
+function ContactForm({ contacts, onSubmit }) {
+
+    const [name, setName] = useState('');
+    const [number, setNumber] = useState('');
+
+    const handleChange = (e) => {
+        const { name } = e.currentTarget;
+        if (name === "name") {
+            setName(e.currentTarget.value);
+        }
+        if (name === 'number') {
+            setNumber(e.currentTarget.value);
+        }
     }
 
-
-    handleChange = (e) => {
-        const { name, value } = e.currentTarget
-        this.setState({
-            [name]: value,
-        })
-    }
-
-    contactСheck = () => {
-
-
-    }
-
-    handleSubmit = e => {
+    const handleSubmit = e => {
         e.preventDefault()
 
-        const nameContacts = this.props.contacts.map(contact => contact.name)
+        const nameContacts = contacts.map(contact => contact.name)
 
-        if (nameContacts.includes(this.state.name)) {
-            alert(`${this.state.name} is already in contacts`)
+        if (nameContacts.includes(name)) {
+            alert(`${name} is already in contacts`)
         } else {
-            this.props.onSubmit(this.state.name, this.state.number)
+            onSubmit(name, number)
         }
 
-        this.reset()
+        setName('')
+        setNumber('')
     }
 
-    reset = () => {
-        this.setState({ name: '', number: '' })
-    }
-    render() {
-        return (
-            <FormContact className="Form" onSubmit={this.handleSubmit}>
-                <label htmlFor=''>
-                    <Name>Name</Name>
-                    <Input className="Input"
-                        type="text"
-                        name="name"
-                        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-                        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-                        required
-                        value={this.state.name}
-                        onChange={this.handleChange}
-                    />
-                </label>
-                <label htmlFor="">
-                    <Name>Number</Name>
-                    <Input
-                        type="tel"
-                        name="number"
-                        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-                        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-                        required
-                        value={this.state.number}
-                        onChange={this.handleChange}
-                    />
-                </label>
-                <Button className="Button" type="submit">Add name</Button>
-            </FormContact>
-        )
-    }
+    return (
+        <FormContact className="Form" onSubmit={handleSubmit}>
+            <label htmlFor=''>
+                <Name>Name</Name>
+                <Input className="Input"
+                    type="text"
+                    name="name"
+                    pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+                    title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+                    required
+                    value={name}
+                    onChange={handleChange}
+                />
+            </label>
+            <label htmlFor="">
+                <Name>Number</Name>
+                <Input
+                    type="tel"
+                    name="number"
+                    pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+                    title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+                    required
+                    value={number}
+                    onChange={handleChange}
+                />
+            </label>
+            <Button className="Button" type="submit">Add name</Button>
+        </FormContact>
+    )
 }
 
 
@@ -82,3 +74,4 @@ ContactForm.propTypes = {
     })),
     onSubmit: PropTypes.func.isRequired
 }
+
